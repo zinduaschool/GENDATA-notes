@@ -145,3 +145,91 @@ WHERE birth_day >= 1970-01-01;
 -- 5. Find all employees who are female and born after 1969 or earn more than 80,000
 SELECT * FROM employee
 WHERE (birth_day >= 1970-01-01 AND sex = 'F') OR salary > 80000;
+
+#Aggregate functions
+-- 1. Find the number of employees
+SELECT COUNT(emp_id)
+FROM employee;
+
+-- 2. How many males and females do we have
+SELECT COUNT(sex) Gender
+FROM employee
+GROUP BY sex;
+
+-- 3. Find the average salary of all employees
+SELECT AVG(salary)
+FROM employee
+WHERE sex = 'M';
+
+-- 4. Total sales of each salesman
+SELECT SUM(total_sales), emp_id
+FROM works_with
+GROUP BY emp_id;
+
+-- 5. Total sales for each client
+SELECT SUM(total_sales), client_id
+FROM works_with
+GROUP BY client_id;
+
+#Wildcards
+-- % any # of characters , _ = one character
+-- 1. Find any client's who are an LLC
+SELECT * FROM client
+WHERE client_name LIKE '%LLC';
+
+-- 2. Any branch supplier in the label business
+SELECT * FROM branch_supplier
+WHERE supplier_name LIKE '%labels';
+
+-- 3. Any employee born in October
+SELECT * FROM employee
+WHERE birth_day LIKE '____-10%';
+
+-- 4. Find any clients who are schools
+SELECT * FROM client
+WHERE client_name LIKE 'Times%';
+
+#UNION
+-- 1. Find a list of all employees and their branch names
+SELECT first_name AS Company_Names
+FROM employee
+UNION
+SELECT branch_name 
+FROM branch;
+
+-- 2. All clients and the branch supplier names
+SELECT client_name AS Client_Supplier, branch_id
+FROM client
+UNION
+SELECT supplier_name, branch_id
+FROM branch_supplier;
+
+-- 3. List of all money spent or earned by the company
+SELECT salary
+FROM employee
+UNION
+SELECT total_sales
+FROM works_with;
+
+# JOINS
+-- Add the extra branch
+INSERT INTO branch VALUES(4, "Buffalo", NULL, NULL);
+SELECT * FROM branch;
+
+-- 1. List all branches and the names of their managers
+SELECT e.emp_id, e.first_name, b.branch_name
+FROM employee e
+RIGHT JOIN branch b
+ON e.emp_id = b.mgr_id;
+
+-- 2. List all employees and the branches they work in
+SELECT e.first_name, e.last_name, b.branch_name
+FROM employee e
+JOIN branch b
+ON e.branch_id = b.branch_id;
+
+
+
+
+
+
